@@ -194,9 +194,11 @@ function(define_libcxx_sub target target_suffix extra_target_flags extra_libdir_
   if(${target} MATCHES threads)
     set(pic OFF)
     set(target_flags -pthread)
+    set(pthread_lib_name "pthread")
   else()
     set(pic ON)
     set(target_flags -D_WASI_EMULATED_PTHREAD)
+    set(pthread_lib_name "wasi-emulated-pthread")
   endif()
   if(${target_suffix} MATCHES lto)
     set(pic OFF)
@@ -250,6 +252,7 @@ function(define_libcxx_sub target target_suffix extra_target_flags extra_libdir_
       -DLIBCXXABI_SILENT_TERMINATE:BOOL=ON
       -DLIBCXXABI_ENABLE_THREADS:BOOL=ON
       -DLIBCXXABI_HAS_PTHREAD_API:BOOL=ON
+      -DLIBCXXABI_PTHREAD_LIB_NAME:STRING=${pthread_lib_name}
       -DLIBCXXABI_HAS_EXTERNAL_THREAD_API:BOOL=OFF
       -DLIBCXXABI_BUILD_EXTERNAL_THREAD_LIBRARY:BOOL=OFF
       -DLIBCXXABI_HAS_WIN32_THREAD_API:BOOL=OFF

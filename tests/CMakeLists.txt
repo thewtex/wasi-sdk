@@ -68,6 +68,12 @@ function(add_testcase runwasi test)
       # Apply language-specific options and dependencies.
       if(test MATCHES "cc$")
         target_compile_options(${target_name} PRIVATE -fno-exceptions)
+        if (NOT ${target} MATCHES threads)
+          target_compile_options(${target_name} PRIVATE
+            -D_WASI_EMULATED_PTHREAD)
+          target_link_options(${target_name} PRIVATE
+            -lwasi-emulated-pthread)
+        endif()
         if(NOT WASI_SDK_TEST_HOST_TOOLCHAIN)
           add_dependencies(${target_name} libcxx-${target})
         endif()
